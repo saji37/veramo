@@ -1,9 +1,9 @@
 
 import express from "express";
 // @ts-ignore
-import { createDid } from "../core/coreService.ts";
+import { createDid, verifyVc } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, findUser } from "./verifierDatabase.ts";
+import { createUser, findUser, findVc } from "./verifierDatabase.ts";
 export const router = express.Router();
 
 
@@ -38,9 +38,12 @@ export const router = express.Router();
             res.json({result:"Error ..."})
         }
     })
-    router.post('/verify-vc/:id',(req: any ,res: any) =>{
+    router.post('/verify-vc/:id',async (req: any ,res: any) =>{
         try {
-            res.json({result:"VC is verified..."})
+            const {id}=req.params;
+            const cred=await findVc(parseInt(id))
+            const result=await verifyVc(cred?.vc)
+            res.json({data:"VC is verified...",result:result})
         } catch (error) {
             res.json({result:"Error ..."})
         }

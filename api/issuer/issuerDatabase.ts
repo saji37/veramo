@@ -15,6 +15,7 @@ export async function createUser(name:string,email: string, password: string, di
     });
 
     console.log('User created:', newUser);
+    return newUser
   } catch (error) {
     console.error('Error creating user:', error);
   } finally {
@@ -53,6 +54,24 @@ export async function findHolder(id:number) {
     return user
   } catch (error) {
     console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function addVc(connectionid:number,vc:any) {
+  try {
+    const newVc = await prisma.vcredential.create({
+      data: {
+        connectionid,
+        vc,
+      },
+    });
+
+    console.log('VC created:', newVc);
+    return newVc;
+  } catch (error) {
+    console.error('Error creating Vc:', error);
   } finally {
     await prisma.$disconnect();
   }

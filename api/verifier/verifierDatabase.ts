@@ -42,3 +42,18 @@ export async function findUser(email:string,password:string) {
     await prisma.$disconnect();
   }
 }
+export async function findVc(id:number) {
+  try {
+    const vc = await prisma.vcredential.findFirst({
+      where: 
+          {id:id}
+    });
+
+    console.log('VC found:', vc); 
+    return vc
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}

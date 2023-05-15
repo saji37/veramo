@@ -23,3 +23,11 @@ export async function createVc(holderDid:string,issuerDid:string,name:string,dob
   console.log(JSON.stringify(verifiableCredential, null, 2))
   return verifiableCredential
 }
+
+export async function verifyVc(cred:any) {
+  const result = await agent.verifyCredential({
+    credential: cred
+  })
+  console.log(`Credential verified`, result.verified)
+  return result.verified
+}

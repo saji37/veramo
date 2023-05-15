@@ -3,7 +3,8 @@ import express from "express";
 // @ts-ignore
 import { createDid, createVc } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, findHolder, findUser } from "./issuerDatabase.ts";
+import { addVc, createUser, findHolder, findUser } from "./issuerDatabase.ts";
+import { Connection } from "pg";
 export const router = express.Router();
 
 
@@ -12,8 +13,8 @@ export const router = express.Router();
         const {name,email,password} = req.body
         try {
             const did=await createDid()
-            createUser(name,email,password,did.did)
-            res.json({result:"Issuer Sign Up successfull"})
+            const newUser=await createUser(name,email,password,did.did)
+            res.json({result:"Issuer Sign Up successfull",issuer:newUser})
         } catch (error) {
             res.json({result:"Sign Up unsuccessfull"})
         }
@@ -50,13 +51,13 @@ export const router = express.Router();
         }
     })
 
-    router.post('/create-vc',async (req: {body:{holderId:string,issuerDid:string,name:string,dob:string,address:string}},res: any) =>{
-        const {holderId,issuerDid,name,dob,address} = req.body;
+    router.post('/create-vc',async (req: {body:{connectionid:string,holderId:string,issuerDid:string,name:string,dob:string,address:string}},res: any) =>{
+        const {connectionid,holderId,issuerDid,name,dob,address} = req.body;
         try {
             const holderDid=await findHolder(parseInt(holderId))
             const vc=await createVc(holderId,issuerDid,name,dob,address);
-            
-            res.json({result:"Credentials created ..."})
+           const cred= await addVc(parseInt(connectionid),vc)
+            res.json({result:"Credentials created ...",Credential:cred})
         } catch (error) {
             res.json({result:"Error Occured ..."})
         }

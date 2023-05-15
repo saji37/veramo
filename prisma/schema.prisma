@@ -35,8 +35,8 @@ model Issuer {
 
 model Connection {
   id Int @id @default(autoincrement())
-  holderid Int
-  issuerid Int
+  holderid String
+  issuerid String
   @@map("connection")
 }
 
@@ -44,5 +44,6 @@ model Vcredential {
   id Int @id @default(autoincrement())
   connectionid Int
   vc Json
+  
   @@map("vcredential")
 }
