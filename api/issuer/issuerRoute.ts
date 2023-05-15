@@ -1,9 +1,9 @@
 
 import express from "express";
 // @ts-ignore
-import { createDid } from "../core/coreService.ts";
+import { createDid, createVc } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, findUser } from "./issuerDatabase.ts";
+import { createUser, findHolder, findUser } from "./issuerDatabase.ts";
 export const router = express.Router();
 
 
@@ -50,9 +50,12 @@ export const router = express.Router();
         }
     })
 
-    router.post('/create-vc',(req: any,res: any) =>{
-     
+    router.post('/create-vc',async (req: {body:{holderId:string,issuerDid:string,name:string,dob:string,address:string}},res: any) =>{
+        const {holderId,issuerDid,name,dob,address} = req.body;
         try {
+            const holderDid=await findHolder(parseInt(holderId))
+            const vc=await createVc(holderId,issuerDid,name,dob,address);
+            
             res.json({result:"Credentials created ..."})
         } catch (error) {
             res.json({result:"Error Occured ..."})

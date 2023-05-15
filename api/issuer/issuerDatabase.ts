@@ -41,3 +41,19 @@ export async function findUser(email:string,password:string) {
     await prisma.$disconnect();
   }
 }
+
+export async function findHolder(id:number) {
+  try {
+    const user = await prisma.issuer.findFirst({
+      where: 
+          {id:id}
+    });
+
+    console.log('User found:', user); 
+    return user
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}

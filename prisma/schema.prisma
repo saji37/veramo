@@ -39,3 +39,10 @@ model Connection {
   issuerid Int
   @@map("connection")
 }
+
+model Vcredential {
+  id Int @id @default(autoincrement())
+  connectionid Int
+  vc Json
+  @@map("vcredential")
+}
