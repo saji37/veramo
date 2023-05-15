@@ -1,12 +1,19 @@
 
 import express from "express";
-export const router = express.Router();
+// @ts-ignore
+import { createDid } from "../core/coreService.ts";
+// @ts-ignore
+import { createUser, establishConnection, findUser, insertData, listConnection } from "./holderDatabase.ts";
+import { Connection } from "pg";
+const router = express.Router();
 
-
-
-    router.post('/signup',(req: { body: { email: any; password: any } },res: any) =>{
-        console.log(req.body)
+    router.post('/signup',async (req: { body: { email: any; password: any } },res: any) =>{
+        // console.log(req.body)
+        const {email,password}=req.body
         try {
+            const did=await createDid()
+            // console.log(did.did)
+            createUser(email,password,did.did)
             res.json({result:"Holder Sign Up successfull"})
         } catch (error) {
             res.json({result:"Sign Up unsuccessfull"})
@@ -17,14 +24,18 @@ export const router = express.Router();
         console.log(req.body)
         const {email,password} = req.body  
         try {
-            res.json({result:"Holder Sign In successfull"})
+            const user=findUser(email,password)
+            res.json({result:"Verifier Sign In successfull",user:user})
         } catch (error) {
             res.json({result:"Sign In unsuccessfull"})
         }
     })
-    router.post('/accept-connection/:id',(req: any ,res: any) =>{
+    router.post('/accept-connection',async (req: any ,res: any) =>{
         try {
-            res.json({result:"Connection Established ..."})
+            const {holderid,issuerid} = req.body;
+            console.log(req.body)
+            const connection=await establishConnection(parseInt(holderid),parseInt(issuerid))
+            res.json({result:"Connection Established ...",connection:connection})
         } catch (error) {
             res.json({result:"Connection not Established ..."})
         }
@@ -52,5 +63,14 @@ export const router = express.Router();
             res.json({result:"Error ..."})
         }
     })
-
- module.exports={router}
+    router.post('/list-connections/:id',async (req: any ,res: any) =>{
+        try {
+            const {id}= req.params;
+            // console.log(id)
+            const connections= await listConnection(parseInt(id))
+            res.json({result:"Connection request sent to the issuer...",Connections : connections})
+        } catch (error) {
+            res.json({result:"Error ..."})
+        }
+    })
+    export default router;

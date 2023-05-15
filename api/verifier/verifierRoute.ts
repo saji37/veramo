@@ -1,23 +1,31 @@
 
 import express from "express";
+// @ts-ignore
+import { createDid } from "../core/coreService.ts";
+// @ts-ignore
+import { createUser, findUser } from "./verifierDatabase.ts";
 export const router = express.Router();
 
 
 
-    router.post('/signup',(req: { body: { email: any; password: any } },res: any) =>{
-        console.log(req.body)
+    router.post('/signup',async (req: { body: { name:any,email: any; password: any } },res: any) =>{
+        // console.log(req.body)
+        const {name,email,password} = req.body
         try {
-            res.json({result:"Verifier Sign Up successfull"})
+            const did=await createDid()
+           const newUser= await createUser(name,email,password,did.did)
+            res.json({result:"Verifier Sign Up successfull",user:newUser})
         } catch (error) {
             res.json({result:"Sign Up unsuccessfull"})
         }
         
     })
-    router.post('/signin',(req: { body: { email: any; password: any } },res: any) =>{
+    router.post('/signin',async (req: { body: { email: any; password: any } },res: any) =>{
         console.log(req.body)
         const {email,password} = req.body  
         try {
-            res.json({result:"Verifier Sign In successfull"})
+            const user=await findUser(email,password)
+            res.json({result:"Verifier Sign In successfull",user:user})
         } catch (error) {
             res.json({result:"Sign In unsuccessfull"})
         }
@@ -38,4 +46,4 @@ export const router = express.Router();
         }
     })
     
- module.exports={router}
+ export default router;
