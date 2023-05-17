@@ -90,4 +90,24 @@ export async function listCredential(id:string) {
   }
 }
 
+export async function findConnection(holderid:string,issuerid:string) {
+  try {
+    const connection = await prisma.connection.findFirst({
+     where: {
+        AND: [
+          { holderid:holderid}, 
+          {issuerid:issuerid}
+        ],
+      },
+    });
+
+    console.log('User found:', connection); 
+    return connection
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 
