@@ -38,8 +38,8 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "ts-node --esm ./api/server.ts"
+    "backend": "--loader ts-node/esm ./api/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",

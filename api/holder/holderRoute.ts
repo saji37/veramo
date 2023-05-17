@@ -3,7 +3,8 @@ import express from "express";
 // @ts-ignore
 import { createDid } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, establishConnection, findUser, insertData, listConnection, listCredential } from "./holderDatabase.ts";
+import { createUser, establishConnection, findConnection, findUser, insertData, listConnection, listCredential } from "./holderDatabase.ts";
+import e from "express";
 
 const router = express.Router();
 
@@ -34,8 +35,13 @@ const router = express.Router();
         try {
             const {holderid,issuerid} = req.body;
             console.log(req.body)
-            const connection=await establishConnection(holderid,issuerid)
-            res.json({result:"Connection Established ...",connection:connection})
+            const conn=await findConnection(holderid,issuerid)
+            if(!conn){
+                var connection=await establishConnection(holderid,issuerid)
+                res.json({result:"Connection Established ...",connection:connection})
+            }else{
+                res.json({result:"Connection is aleardy established ...",connection:conn})
+            }
         } catch (error) {
             res.json({result:"Connection not Established ..."})
         }
