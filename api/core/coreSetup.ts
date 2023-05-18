@@ -35,7 +35,7 @@ import { DataSource } from 'typeorm'
 const DATABASE_FILE = 'database.sqlite'
 
 // You will need to get a project ID from infura https://www.infura.io
-// const INFURA_PROJECT_ID = 'c502979472ee42ba97814281b17348f7'
+const INFURA_PROJECT_ID = 'c502979472ee42ba97814281b17348f7'
 
 // This will be the secret key for the KMS
 const KMS_SECRET_KEY =
@@ -66,7 +66,7 @@ const KMS_SECRET_KEY =
           'did:ethr:goerli': new EthrDIDProvider({
             defaultKms: 'local',
             network: 'goerli',
-            // rpcUrl: 'https://goerli.infura.io/v3/' + INFURA_PROJECT_ID,
+            rpcUrl: 'https://goerli.infura.io/v3/' + INFURA_PROJECT_ID,
           }),
           'did:web': new WebDIDProvider({
             defaultKms: 'local',
@@ -75,7 +75,7 @@ const KMS_SECRET_KEY =
       }),
       new DIDResolverPlugin({
         resolver: new Resolver({
-          // ...ethrDidResolver({ infuraProjectId: INFURA_PROJECT_ID }),
+          ...ethrDidResolver({ infuraProjectId: INFURA_PROJECT_ID }),
           ...webDidResolver(),
         }),
       }),
