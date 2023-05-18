@@ -63,19 +63,39 @@ export async function establishConnection(holderid:string,issuerid:string) {
 
 export async function listConnection(id:string) {
   try {
-    const connections = await prisma.connection.findFirst({
-      where: { holderid: id}
-         
-    });
+    const feed = await prisma.$queryRaw<Connection[]>`select "name","email","did" from "issuer" join "connection" on "did"="connection"."issuerid" where "connection"."holderid"=${id}`
+    
 
-    console.log('Connection Found:', connections); 
-    return connections;
+    console.log('Credentials Found:', feed); 
+    return feed;
   } catch (error) {
     console.error('Error finding user:', error);
   } finally {
     await prisma.$disconnect();
   }
 }
+export async function getIssuer(id:string) {
+  try {
+    const issuer = await prisma.issuer.findFirst({
+      where: { did: id},
+      select:{
+        name:true,
+        email:true,
+        did:true
+      }
+         
+    });
+
+    console.log('Issuer:',issuer); 
+    return issuer;
+
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function listCredential(id:string) {
   try {
     const feed = await prisma.$queryRaw<Vcredential[]>`select * from "vcredential" join "connection" on "connectionid"="connection"."id" where "connection"."holderid"=${id}`

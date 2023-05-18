@@ -3,7 +3,7 @@ import express from "express";
 // @ts-ignore
 import { createDid } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, establishConnection, findConnection, findUser, insertData, listConnection, listCredential } from "./holderDatabase.ts";
+import { createUser, establishConnection, findConnection, findUser, getIssuer, insertData, listConnection, listCredential } from "./holderDatabase.ts";
 import e from "express";
 
 const router = express.Router();
@@ -55,9 +55,11 @@ const router = express.Router();
         }
     })
 
-    router.post('/connection',(req: any ,res: any) =>{
+    router.get('/get-issuer/:id',async (req: any ,res: any) =>{
         try {
-            res.json({result:"Connection request sent to the issuer..."})
+            const {id}= req.params;
+            const issuer= await getIssuer(id)
+            res.status(200).json({result:"Issuer found ...",data:issuer})
         } catch (error) {
             res.json({result:"Error ..."})
         }
@@ -74,7 +76,7 @@ const router = express.Router();
             const {id}= req.params;
             // console.log(id)
             const connections= await listConnection(id)
-            res.json({result:"Connection request sent to the issuer...",Connections : connections})
+            res.json({result:"Connection request sent to the issuer...",data : connections})
         } catch (error) {
             res.json({result:"Error ..."})
         }
@@ -84,7 +86,7 @@ const router = express.Router();
             const {id}= req.params;
             // console.log(id)
             const credentials= await listCredential(id)
-            res.json({result:"Credentials Found ...",Credentials : credentials})
+            res.json({result:"Credentials Found ...",data : credentials})
         } catch (error) {
             res.json({result:"Error ..."})
         }
