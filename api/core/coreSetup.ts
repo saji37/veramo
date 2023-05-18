@@ -38,7 +38,7 @@ const DATABASE_FILE = 'database.sqlite'
 const INFURA_PROJECT_ID = 'c502979472ee42ba97814281b17348f7'
 
 // This will be the secret key for the KMS
-const KMS_SECRET_KEY =
+const KMS_SECRET_KEY =    
   '11b574d316903ced6cc3f4787bbcc3047d9c72d1da4d83e36fe714ef785d10c1'
   // f5408e9407a2428bb776ab746cbbd2c1
   const dbConnection = new DataSource({
