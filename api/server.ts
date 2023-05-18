@@ -19,7 +19,7 @@ app.use(express.json())
 
 //*Checking wheather db exists and if it doesnot exist, Creating new one.. Make sure you have created username and password
 
-checkDbExists();
+await checkDbExists();
 
 app.use("/holder", HolderRoutes)
 app.use("/issuer",issuerRoutes)
