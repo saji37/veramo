@@ -3,7 +3,7 @@ import express from "express";
 // @ts-ignore
 import { createDid, verifyVc } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, findUser, findVc } from "./verifierDatabase.ts";
+import { checkIfExist, createUser, findUser, findVc } from "./verifierDatabase.ts";
 export const router = express.Router();
 
 
@@ -12,9 +12,14 @@ export const router = express.Router();
         // console.log(req.body)
         const {name,email,password} = req.body
         try {
+            const userExist = await checkIfExist(email);
+      if (!userExist) {
             const did=await createDid()
            const newUser= await createUser(name,email,password,did.did)
-            res.json({result:"Verifier Sign Up successfull",user:newUser})
+            res.json({result:"Verifier Sign Up successfull",data:newUser})
+        } else {
+          res.json({ result: "Verifier already exists", data: userExist });
+        }
         } catch (error) {
             res.json({result:"Sign Up unsuccessfull"})
         }

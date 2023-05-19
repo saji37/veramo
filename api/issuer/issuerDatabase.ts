@@ -45,7 +45,7 @@ export async function findUser(email:string,password:string) {
 
 export async function findHolder(id:number) {
   try {
-    const user = await prisma.issuer.findFirst({
+    const user = await prisma.user.findFirst({
       where: 
           {id:id}
     });
@@ -72,6 +72,23 @@ export async function addVc(connectionid:number,vc:any) {
     return newVc;
   } catch (error) {
     console.error('Error creating Vc:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function checkIfExist(email:string) {
+  try {
+    const user = await prisma.issuer.findFirst({
+     where: { email:email},
+     select:{
+      email:true
+     }
+    });
+    console.log('User found:', user);
+    return user
+  } catch (error) {
+    console.error('Error finding user:', error);
   } finally {
     await prisma.$disconnect();
   }

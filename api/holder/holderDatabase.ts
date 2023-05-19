@@ -131,3 +131,23 @@ export async function findConnection(holderid:string,issuerid:string) {
 }
 
 
+export async function checkIfExist(email:string) {
+  try {
+    const user = await prisma.user.findFirst({
+     where: { email:email},
+     select:{
+      email:true
+     }
+    });
+    console.log('User found:', user);
+    return user
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+
+
+

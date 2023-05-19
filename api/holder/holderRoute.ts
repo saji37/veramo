@@ -3,7 +3,7 @@ import express from "express";
 // @ts-ignore
 import { createDid } from "../core/coreService.ts";
 // @ts-ignore
-import { createUser, establishConnection, findConnection, findUser, getIssuer, insertData, listConnection, listCredential } from "./holderDatabase.ts";
+import { checkIfExist, createUser, establishConnection, findConnection, findUser, getIssuer, insertData, listConnection, listCredential } from "./holderDatabase.ts";
 import e from "express";
 
 const router = express.Router();
@@ -12,10 +12,17 @@ const router = express.Router();
         // console.log(req.body)
         const {email,password}=req.body
         try {
+            const userExist=await checkIfExist(email);
+            if(!userExist){
             const did=await createDid()
             // console.log(did.did)
             const user=await createUser(email,password,did.did)
-            res.json({result:"Holder Sign Up successfull", user:user})
+            res.json({result:"Holder Sign Up successfull", data:user})
+            }
+            else{
+            res.json({result:"Holder already exists", data:userExist})
+
+            }
         } catch (error) {
             res.json({result:"Sign Up unsuccessfull"})
         }

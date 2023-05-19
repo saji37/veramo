@@ -25,8 +25,6 @@ catch{
 var res;
   try{
   res = await client.query(`SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower('${process.env.DB}');`)
-  console.log(res.rows.length)
-  
   if(res.rows.length === 0){
     console.log("Create the DB ...")
   }

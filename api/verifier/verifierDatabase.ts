@@ -57,3 +57,20 @@ export async function findVc(id:number) {
     await prisma.$disconnect();
   }
 }
+
+export async function checkIfExist(email:string) {
+  try {
+    const user = await prisma.verifier.findFirst({
+     where: { email:email},
+     select:{
+      email:true
+     }
+    });
+    console.log('User found:', user);
+    return user
+  } catch (error) {
+    console.error('Error finding user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
