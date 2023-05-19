@@ -21,7 +21,9 @@ const validate = ajv.compile(credentialSchema);
 const isValid = validate(data);
 if (isValid) {
   console.log('Credential is valid');
+  return true;
 } else {
   console.log('Credential is invalid:', validate.errors);
+  return false;
 }
 }

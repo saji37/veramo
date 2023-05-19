@@ -59,8 +59,13 @@ router.post( "/create-vc", async ( req: { body: { schemaid:string,connectionid: 
     try {
       // const holderDid = await findHolder(parseInt(holderId));
       const vc = await createVc(schemaid,issuerDid, data);
+      if(!vc){
+        res.json({ result: "You need to pass required fields ..." });
+      }
+      else{
       const cred = await addVc(parseInt(connectionid), vc);
       res.json({ result: "Credentials created ...", Credential: cred });
+      }
     } catch (error) {
       res.json({ result: "Error Occured ..." });
     }
