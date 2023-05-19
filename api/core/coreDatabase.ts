@@ -1,5 +1,9 @@
 import pkg from "pg";
+import { PrismaClient } from '@prisma/client';
 const { Client } = pkg;
+
+const prisma = new PrismaClient();
+
 export const checkDbExists =async () =>{
 
 // const client = new Client({
@@ -45,5 +49,19 @@ else{
     console.log("Tables already created ...")
   }
   client.end();
+}
+
+export async function getSchema(id:number) {
+  try {
+    const schema= await prisma.credentialSchema.findFirst({
+     where: { id:id}
+    });
+    // console.log('Schema found:', schema?.schema);
+    return schema
+  } catch (error) {
+    console.error('Error finding schema:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 

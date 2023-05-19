@@ -1,4 +1,6 @@
 // @ts-ignore
+import { getSchema } from './coreDatabase.ts';
+// @ts-ignore
 import { agent } from './coreSetup.ts'
 import Ajv, { JSONSchemaType } from 'ajv';
 
@@ -31,11 +33,11 @@ export async function createDid() {
  
 }
 
-export async function createVc(issuerDid:string,name:string,dob:string,address:string) {
 
-
+export async function createVc(schemaid:string,issuerDid:string,name:string,dob:string,address:string) {
+const schema = await getSchema(parseInt(schemaid));
+console.log(schema);
 const isValid = validate({name:name,dob:dob,address:address});
-
 if (isValid) {
   console.log('Credential is valid');
 } else {
@@ -43,7 +45,7 @@ if (isValid) {
 }
   const verifiableCredential = await agent.createVerifiableCredential({
     credential: {
-      type:['AdharCard'],
+      type:[`${schema?.name}`],
       issuer: { id: issuerDid },
       credentialSubject: {
         name:name,
