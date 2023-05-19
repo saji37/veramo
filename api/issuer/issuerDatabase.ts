@@ -93,3 +93,20 @@ export async function checkIfExist(email:string) {
     await prisma.$disconnect();
   }
 }
+
+export async function createSchema(issuerid:string,name: string, schema:any) {
+  try {
+    const newSchema = await prisma.credentialSchema.create({
+      data: {
+      issuerid,
+      name,
+      schema
+      },
+    });
+    return newSchema
+  } catch (error) {
+    console.error('Error creating user:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}

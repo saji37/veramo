@@ -29,6 +29,8 @@ var res;
     console.log("Create the DB ...")
   }
 else{
+  await client.query(`CREATE TABLE credentialschema(id SERIAL PRIMARY KEY,issuerid VARCHAR(150),name VARCHAR(150),schema TEXT[]);`);
+  console.log('Schema table is created ...')
   await client.query(`CREATE TABLE userdetails(id SERIAL PRIMARY KEY,email VARCHAR(150),password VARCHAR(150),did VARCHAR(150));`);
   await client.query(`CREATE TABLE verifier(id SERIAL PRIMARY KEY,name VARCHAR(150),email VARCHAR(150),password VARCHAR(150),did VARCHAR(150));`);
   await client.query(`CREATE TABLE issuer(id SERIAL PRIMARY KEY,name VARCHAR(150),email VARCHAR(150),password VARCHAR(150),did VARCHAR(150));`);

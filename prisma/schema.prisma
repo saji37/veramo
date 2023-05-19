@@ -47,3 +47,11 @@ model Vcredential {
   
   @@map("vcredential")
 }
+model CredentialSchema {
+  id Int @id @default(autoincrement())
+  issuerid String
+  name String
+  schema String[]
+  
+  @@map("credentialschema")
+}

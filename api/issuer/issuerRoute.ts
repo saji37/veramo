@@ -2,7 +2,7 @@ import express from "express";
 // @ts-ignore
 import { createDid, createVc } from "../core/coreService.ts";
 // @ts-ignore
-import { addVc, checkIfExist, createUser, findHolder, findUser, } from "./issuerDatabase.ts";
+import { addVc, checkIfExist, createSchema, createUser, findHolder, findUser, } from "./issuerDatabase.ts";
 import { Connection } from "pg";
 export const router = express.Router();
 
@@ -66,5 +66,17 @@ router.post( "/create-vc", async ( req: { body: { connectionid: string; issuerDi
     }
   }
 );
+
+router.post( "/create-schema", async ( req: { body: { issuerid:string;name: string;schema:any }; }, res: any ) => {
+  const { issuerid, name , schema} = req.body;
+  try {
+    const schemaCreated = await createSchema(issuerid,name,schema);
+    res.json({ result: "Schema created ...", data:schemaCreated });
+  } catch (error) {
+    res.json({ result: "Error Occured ..." });
+  }
+}
+);
+
 
 export default router;
