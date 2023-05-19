@@ -3,29 +3,32 @@ import { getSchema } from './coreDatabase.ts';
 // @ts-ignore
 import { agent } from './coreSetup.ts'
 import Ajv, { JSONSchemaType } from 'ajv';
+import { checkSchema } from './schemaAdd.js';
+
+
 
 // Define your custom credential type
-interface MyCredentialType {
-  name: string;
-  dob:string;
-  address:string;
-}
+// interface MyCredentialType {
+//   name: string;
+//   dob:string;
+//   address:string;
+// }
 
-// Define your JSON Schema
-const credentialSchema: JSONSchemaType<MyCredentialType> = {
-  type: 'object',
-  properties: {
+// // Define your JSON Schema
+// const credentialSchema: JSONSchemaType<MyCredentialType> = {
+//   type: 'object',
+//   properties: {
     
-    name: { type: 'string' },
-    dob:{type:'string'},
-    address:{type:'string'}
-  },
-  required: ['name','dob','address'],
-};
+//     name: { type: 'string' },
+//     dob:{type:'string'},
+//     address:{type:'string'}
+//   },
+//   required: ['name','dob','address'],
+// };
 
-// Create an instance of the Ajv validator
-const ajv = new Ajv();
-const validate = ajv.compile(credentialSchema);
+// // Create an instance of the Ajv validator
+// const ajv = new Ajv();
+// const validate = ajv.compile(credentialSchema);
 
 
 export async function createDid() {
@@ -34,24 +37,17 @@ export async function createDid() {
 }
 
 
-export async function createVc(schemaid:string,issuerDid:string,name:string,dob:string,address:string) {
+export async function createVc(schemaid:string,issuerDid:string,data:any) {
 const schema = await getSchema(parseInt(schemaid));
 console.log(schema);
-const isValid = validate({name:name,dob:dob,address:address});
-if (isValid) {
-  console.log('Credential is valid');
-} else {
-  console.log('Credential is invalid:', validate.errors);
-}
+const validate=checkSchema(schema?.schema,data)
+
+
   const verifiableCredential = await agent.createVerifiableCredential({
     credential: {
       type:[`${schema?.name}`],
       issuer: { id: issuerDid },
-      credentialSubject: {
-        name:name,
-        dob:dob,
-        address:address
-      },
+      credentialSubject: data
     },
     proofFormat: 'jwt',
   })

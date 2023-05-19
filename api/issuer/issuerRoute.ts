@@ -54,11 +54,11 @@ router.post( "/offer-credentials/:id", (req: { body: { id: any } }, res: any) =>
   }
 );
 
-router.post( "/create-vc", async ( req: { body: { schemaid:string,connectionid: string; issuerDid: string; name: string; dob: string; address: string; }; }, res: any ) => {
-    const { schemaid,connectionid, issuerDid, name, dob, address } = req.body;
+router.post( "/create-vc", async ( req: { body: { schemaid:string,connectionid: string; issuerDid: string; data:any }; }, res: any ) => {
+    const { schemaid,connectionid, issuerDid, data} = req.body;
     try {
       // const holderDid = await findHolder(parseInt(holderId));
-      const vc = await createVc(schemaid,issuerDid, name, dob, address);
+      const vc = await createVc(schemaid,issuerDid, data);
       const cred = await addVc(parseInt(connectionid), vc);
       res.json({ result: "Credentials created ...", Credential: cred });
     } catch (error) {
