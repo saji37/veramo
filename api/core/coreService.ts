@@ -2,7 +2,6 @@
 import { getSchema } from './coreDatabase.ts';
 // @ts-ignore
 import { agent } from './coreSetup.ts'
-import Ajv, { JSONSchemaType } from 'ajv';
 import { checkSchema } from './schemaAdd.js';
 
 export async function createDid() {
